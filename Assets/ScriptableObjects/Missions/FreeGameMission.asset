@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 303c0cb3e6cdedb4ab8de4a0cccd9b07, type: 3}
-  m_Name: 2_Bob
+  m_Script: {fileID: 11500000, guid: 6d2adda6bda4c1842b09fc1fbc9267e5, type: 3}
+  m_Name: FreeGameMission
   m_EditorClassIdentifier: 
-  enemyName: Bob
-  nickname: El Despistado
-  maxVelocity: 9.9
-  errorPercentage: 16
+  activeUserTarget: 1
+  activeIATarget: 1
+  randomizeTargets: 0

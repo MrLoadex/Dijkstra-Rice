@@ -25,7 +25,7 @@ public class CityBuilder : MonoBehaviour
     public Corner[,] Corners => corners;
     public Target[,] Targets => targets;
 
-    public void BuildCity(IAConfiguration iaConfiguration, int x, int z)
+    public void BuildCity(int x, int z)
     {
         blocksX = x;
         blocksZ = z;
@@ -184,16 +184,16 @@ public class CityBuilder : MonoBehaviour
 
     void OnEnable()
     {
-        UIManager.GameConfiguredEvent += BuildCity;
+        //UIManager.GameConfiguredEvent += BuildCity;
     }
 
     void OnDisable()
     {
-        UIManager.GameConfiguredEvent -= BuildCity;
+        //UIManager.GameConfiguredEvent -= BuildCity;
     }
 
     private void OnDestroy() {
-        UIManager.GameConfiguredEvent -= BuildCity;
+        //UIManager.GameConfiguredEvent -= BuildCity;
     }
 
 }

@@ -11,7 +11,10 @@ public enum CarType
 [CreateAssetMenu(fileName = "Mission", menuName = "ScriptableObjects/Mission", order = 1)]
 public class Mission : ScriptableObject
 {
-    public Action<CarType> MissionCompletedEvent;
+    public static Action<CarType> MissionCompletedEvent;
+
+    [SerializeField] private IAConfiguration iaConfiguration;
+    public IAConfiguration IAConfiguration => iaConfiguration;
 
     [SerializeField] private bool activeUserTarget;
     [SerializeField] private bool activeIATarget;

@@ -2,31 +2,69 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using Newtonsoft.Json.Linq;
-
+using System;
+using System.Linq;
 public class ScoresManager : Singleton<ScoresManager>
 {
-
+    public static Action<(int, string)[]> UpdatedScoresEvent;
     (int, string)[] scores = new (int, string)[5];
     
-    private string token = ""; // Asegúrate de mantener tu token seguro
+    private string token; // Asegúrate de mantener tu token seguro
     private string gistId = "d8d3ad587a97d875706d671a89883bb7"; // El ID de tu Gist
     private string gistApiUrl = "https://api.github.com/gists/";
 
     void Start()
     {
-        ReadGist();
+        StartCoroutine(ReadScoresCoroutine());
     }
 
-    // Crear o actualizar el Gist
-    public void CreateOrUpdateGist(string content)
+    public void RequestCheckActualScores()
     {
-        StartCoroutine(UpdateGistCoroutine(content));
+        StartCoroutine(ReadScoresCoroutine());
+    }
+    // Crear o actualizar el Gist
+    
+    public void AddScore(string name)
+    {
+        int score = GameManager.Instance.ActualScore;
+
+        (int, string) scoreTuple = (score, name);
+        Debug.Log("Score: " + scoreTuple.Item1 + " Name: " + scoreTuple.Item2);
+        // Leer los valores nuevamente
+        // Esperar a que se actualicen
+        StartCoroutine(AddScoreCoroutine(scoreTuple));
+    }
+
+    IEnumerator AddScoreCoroutine((int, string) scoreTuple)
+    {
+        yield return StartCoroutine(ReadScoresCoroutine());
+        // Comprobar si el score es mayor que el minimo
+        if (scoreTuple.Item1 <= scores[4].Item1)
+        {
+            Debug.Log("Score is lower than the minimum");
+            yield return null;
+        }
+        else
+        {
+            //Buscar la posicion del score en el array
+            int position = Array.FindIndex(scores, s => s.Item1 < scoreTuple.Item1);
+            // Insertar el score en la posicion, desplazando el resto
+            for (int i = 4; i > position; i--)
+            {
+                scores[i] = scores[i - 1];
+            }
+            scores[position] = scoreTuple;
+            string content = string.Join("\n", scores.Select(s => $"{s.Item1} {s.Item2}"));
+            // Actualizar el Gist
+            StartCoroutine(UpdateGistCoroutine(content));
+        }
     }
 
     private IEnumerator UpdateGistCoroutine(string content)
     {
-        // Crear el JSON con el contenido actualizado
-        string jsonData = "{\"files\": {\"gistfile1.txt\": {\"content\": \"" + content + "\"}}}";
+        // Escapar el contenido para JSON
+        string escapedContent = content.Replace("\n", "\\n").Replace("\"", "\\\"");
+        string jsonData = "{\"files\": {\"gistfile1.txt\": {\"content\": \"" + escapedContent + "\"}}}";
         
         // Crear la solicitud para actualizar el Gist usando PATCH
         UnityWebRequest request = new UnityWebRequest(gistApiUrl + gistId, "PATCH");
@@ -36,18 +74,13 @@ public class ScoresManager : Singleton<ScoresManager>
         request.SetRequestHeader("Authorization", "token " + token);
         request.SetRequestHeader("Content-Type", "application/json");
         request.SetRequestHeader("User-Agent", "Unity");
-
+        Debug.Log("Sending request " + escapedContent);
         // Enviar la solicitud
         yield return request.SendWebRequest();
+        UpdatedScoresEvent?.Invoke(scores);
     }
 
-    // Leer el Gist
-    public void ReadGist()
-    {
-        StartCoroutine(ReadGistCoroutine());
-    }
-
-    private IEnumerator ReadGistCoroutine()
+    private IEnumerator ReadScoresCoroutine()
     {
         // Realizar una solicitud GET para leer el Gist
         UnityWebRequest request = UnityWebRequest.Get(gistApiUrl + gistId);
@@ -77,7 +110,7 @@ public class ScoresManager : Singleton<ScoresManager>
 
                         if (!string.IsNullOrEmpty(content))
                         {
-                            Debug.Log($"Contenido del Gist ({filename}):\n{content}");
+                            ParseScores(content);
                         }
                         else
                         {
@@ -101,5 +134,37 @@ public class ScoresManager : Singleton<ScoresManager>
             Debug.LogError("Código de Estado HTTP: " + request.responseCode);
             Debug.LogError("Respuesta Completa: " + request.downloadHandler.text);
         }
+    }
+
+    private void ParseScores(string content)
+    {
+        // Dividir el contenido en líneas
+        string[] lines = content.Split('\n');
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrEmpty(line)) continue; // Saltar líneas vacías
+
+            // Dividir la línea en puntaje y nombre
+            int spaceIndex = line.IndexOf(' ');
+            if (spaceIndex == -1)
+            {
+                Debug.LogWarning($"Formato incorrecto en la línea {i + 1}: {line}");
+                continue;
+            }
+
+            string scorePart = line.Substring(0, spaceIndex).Trim();
+            string namePart = line.Substring(spaceIndex + 1).Trim();
+
+            if (int.TryParse(scorePart, out int score))
+            {
+                scores[i] = (score, namePart);
+            }
+            else
+            {
+                Debug.LogWarning($"No se pudo convertir el puntaje en la línea {i + 1}: {line}");
+            }
+        }
+        UpdatedScoresEvent?.Invoke(scores);
     }
 }

@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d2adda6bda4c1842b09fc1fbc9267e5, type: 3}
-  m_Name: TestMission
+  m_Name: 2_BertaMision
   m_EditorClassIdentifier: 
+  iaConfiguration: {fileID: 11400000, guid: b8b29992c5fd43c4b87d0ca16679a261, type: 2}
   activeUserTarget: 1
   activeIATarget: 1
   randomizeTargets: 0
