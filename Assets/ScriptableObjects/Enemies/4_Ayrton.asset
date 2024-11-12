@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 303c0cb3e6cdedb4ab8de4a0cccd9b07, type: 3}
   m_Name: 4_Ayrton
   m_EditorClassIdentifier: 
+  enemySprite: {fileID: 21300000, guid: 6c51408d4d94cce47b83319cec5121f2, type: 3}
   enemyName: Ayrton
-  nickname: El Veloz
+  nickname: Valiste v*rga
   maxVelocity: 10
   errorPercentage: 0

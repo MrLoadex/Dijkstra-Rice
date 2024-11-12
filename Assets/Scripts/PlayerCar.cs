@@ -6,7 +6,15 @@ public class PlayerCar : Car
 
     void Start()
     {
-        controller = new PlayerDesktopController();
+        //si es movil
+        if (GameManager.Instance.IsMobile)
+        {
+            controller = new MobileController();
+        }
+        else
+        {
+            controller = new PlayerDesktopController();
+        }
     }
 
     protected override void Update()

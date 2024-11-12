@@ -120,7 +120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4462b2c091202874e8f88c4c452d3ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 0
+  isUserActive: 0
+  isIAActive: 0
 --- !u!1 &9218442293292875492
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,10 +246,10 @@ MonoBehaviour:
   cornerXNeg: {fileID: 0}
   cornerZPos: {fileID: 0}
   cornerZNeg: {fileID: 0}
-  weightXPos: 1
-  weightXNeg: 1
-  weightZPos: 1
-  weightZNeg: 1
+  WeightXPos: 0
+  WeightXNeg: 0
+  WeightZPos: 0
+  WeightZNeg: 0
 --- !u!1001 &2135572880579334667
 PrefabInstance:
   m_ObjectHideFlags: 0

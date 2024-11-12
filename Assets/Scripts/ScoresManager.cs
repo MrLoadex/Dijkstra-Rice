@@ -9,7 +9,7 @@ public class ScoresManager : Singleton<ScoresManager>
     public static Action<(int, string)[]> UpdatedScoresEvent;
     (int, string)[] scores = new (int, string)[5];
     
-    private string token; // Asegúrate de mantener tu token seguro
+    private string token = ""; // Asegúrate de mantener tu token seguro
     private string gistId = "d8d3ad587a97d875706d671a89883bb7"; // El ID de tu Gist
     private string gistApiUrl = "https://api.github.com/gists/";
 
@@ -26,10 +26,12 @@ public class ScoresManager : Singleton<ScoresManager>
     
     public void AddScore(string name)
     {
+        if (name == "") name = "Anónimo";
+        else if (name.Length > 10) name = name.Substring(0, 10);
+
         int score = GameManager.Instance.ActualScore;
 
         (int, string) scoreTuple = (score, name);
-        Debug.Log("Score: " + scoreTuple.Item1 + " Name: " + scoreTuple.Item2);
         // Leer los valores nuevamente
         // Esperar a que se actualicen
         StartCoroutine(AddScoreCoroutine(scoreTuple));
@@ -74,10 +76,9 @@ public class ScoresManager : Singleton<ScoresManager>
         request.SetRequestHeader("Authorization", "token " + token);
         request.SetRequestHeader("Content-Type", "application/json");
         request.SetRequestHeader("User-Agent", "Unity");
-        Debug.Log("Sending request " + escapedContent);
         // Enviar la solicitud
         yield return request.SendWebRequest();
-        UpdatedScoresEvent?.Invoke(scores);
+        StartCoroutine(ReadScoresCoroutine());
     }
 
     private IEnumerator ReadScoresCoroutine()

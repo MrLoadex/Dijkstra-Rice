@@ -43,10 +43,6 @@ public class IAController : Controller
                 currentCorner = corner;
                 NextCornerEvent?.Invoke(path[0], corner.GetWeight(path[0]));
             }
-            else
-            {
-                Debug.Log("Llegó al final del camino.");
-            }
         }
     }
 

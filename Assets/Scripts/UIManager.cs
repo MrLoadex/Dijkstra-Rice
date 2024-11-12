@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using System.Collections;
 public class UIManager : Singleton<UIManager>
 {
     [Header("Configuraciones de Enemigos")]
@@ -17,6 +18,8 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject nextMissionPanel;
     [SerializeField] private GameObject EndGameScorePanel;
+    [SerializeField] private GameObject startPanel;
+    [SerializeField] private GameObject mobilePanel;
 
     
     [Header("Config Ciudad")]
@@ -36,6 +39,16 @@ public class UIManager : Singleton<UIManager>
     [Header("Ventana de Error")]
     [SerializeField] private GameObject errorWindowPrefab;
 
+    [Header("Config Start Panel")]
+    [SerializeField] private TextMeshProUGUI startPanelText;
+    [SerializeField] private EnemyCard enemyCardStartPanel;
+
+    [Header("Config Mobile")]
+    [SerializeField] private Button turnLeftButton;
+    [SerializeField] private Button turnRightButton;
+    public static Action TurnLeftActionEvent;
+    public static Action TurnRightActionEvent;
+    public static Action AccelerateActionEvent;
 
     private int cityBlocksX;
     private int cityBlocksZ;
@@ -73,8 +86,23 @@ public class UIManager : Singleton<UIManager>
     }    
     public void SubmitUserName()
     {
+        if (nameNextMissionInput.text == "") nameNextMissionInput.text = "Anónimo";
+        else if (nameNextMissionInput.text.Length > 10) nameNextMissionInput.text = nameNextMissionInput.text.Substring(0, 10);
+        nameNextMissionInput.text = nameNextMissionInput.text.Replace(" ", "_");
         ScoresManager.Instance.AddScore(nameNextMissionInput.text);
         ShowEndGameScorePanel();
+    }
+    public void TurnLeft()
+    {
+        TurnLeftActionEvent?.Invoke();
+    }
+    public void TurnRight()
+    {
+        TurnRightActionEvent?.Invoke();
+    }
+    public void Accelerate()
+    {
+        AccelerateActionEvent?.Invoke();
     }
     public void ClosePanels()
     {
@@ -86,6 +114,8 @@ public class UIManager : Singleton<UIManager>
         gameOverPanel.SetActive(false);
         nextMissionPanel.SetActive(false);
         EndGameScorePanel.SetActive(false);
+        startPanel.SetActive(false);
+        mobilePanel.SetActive(false);
     }
     public void ShowBuildCityPanel()
     {
@@ -140,5 +170,39 @@ public class UIManager : Singleton<UIManager>
     {
         ClosePanels();
         EndGameScorePanel.SetActive(true);
+    }
+    public void ShowStartPanel(IAConfiguration iaConfiguration)
+    {
+        ClosePanels();
+        startPanel.SetActive(true);
+        enemyCardStartPanel.Configure(iaConfiguration);
+        StartCoroutine(showStartPanelCoroutine(3));
+    }
+    IEnumerator showStartPanelCoroutine(float seconds)
+    {
+        if (seconds == 3) //Esto esta aca porque si no, el panel no se activa. Debe ser porque se esta llamando a cerrar paneles desde otro lado. Pero me da paja averiguar desde donde.
+        {
+            yield return new WaitForSeconds(0.1f);
+            startPanel.SetActive(true);
+        }
+        if (seconds > 0)
+        {
+            startPanelText.text = seconds.ToString();
+            SoundManager.Instance.PlayReadySound();
+            yield return new WaitForSeconds(1); // 3 / 2 / 1
+            StartCoroutine(showStartPanelCoroutine(seconds-1));
+        }
+        else
+        {
+            startPanelText.text = "GO!";
+            SoundManager.Instance.PlayStartSound();
+            yield return new WaitForSeconds(0.3f);
+            ClosePanels();
+            ShowMobilePanel();
+        }
+    }
+    public void ShowMobilePanel() // Diferente a los otros show porque no cierra otros paneles
+    {
+        mobilePanel.SetActive(true);
     }
 }

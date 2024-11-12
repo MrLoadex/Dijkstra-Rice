@@ -23,6 +23,6 @@ class IAModel
             Debug.LogError("No se han configurado los nodos");
             return null;
         }
-        return dijkstra.FindShortestPath(corners[1, 0], cornerTarget, corners, iaConfiguration.ErrorPercentage);
+        return dijkstra.FindShortestPath(corners[0, 0], cornerTarget, corners, iaConfiguration.ErrorPercentage);
     }
 }

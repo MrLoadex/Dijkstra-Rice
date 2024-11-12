@@ -38,13 +38,13 @@ class Dijkstra
 
             if (current == end)
             {
-                return BuildPath(previousCorners, end);
+                return buildPath(previousCorners, end);
             }
 
-            foreach (var neighbor in GetNeighbors(current))
+            foreach (var neighbor in getNeighbors(current))
             {
                 int pesoOriginal = current.GetWeight(neighbor);
-                int peso = IntroducirError(pesoOriginal, porcentajeError);
+                int peso = addError(pesoOriginal, porcentajeError);
 
                 int alt = distances[current] + peso;
                 if (alt < distances[neighbor])
@@ -73,19 +73,18 @@ class Dijkstra
         return new List<Corner>(); // Retornar lista vacía si no hay camino
     }
 
-    private int IntroducirError(int peso, float porcentajeError)
+    private int addError(int peso, float porcentajeError)
     {
         if (porcentajeError == 0) return peso;
 
         if (Random.Range(0f, 100f) < porcentajeError)
         {
-            int signo = Random.value < 0.5f ? -1 : 1;
-            return Mathf.Max(peso - signo, 1); 
+            return 0; 
         }
         return peso;
     }
 
-    private List<Corner> BuildPath(Dictionary<Corner, Corner> previousCorners, Corner end)
+    private List<Corner> buildPath(Dictionary<Corner, Corner> previousCorners, Corner end)
     {
         List<Corner> path = new List<Corner>();
         for (Corner at = end; at != null; at = previousCorners.ContainsKey(at) ? previousCorners[at] : null)
@@ -96,7 +95,7 @@ class Dijkstra
         return path;
     }
 
-    private List<Corner> GetNeighbors(Corner corner)
+    private List<Corner> getNeighbors(Corner corner)
     {
         return new List<Corner>(corner.GetNeighbors());
     }

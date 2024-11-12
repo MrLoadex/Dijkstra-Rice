@@ -17,6 +17,7 @@ public class EnemyCard : MonoBehaviour
     public void Configure(IAConfiguration iaConfiguration)
     {
         this.iaConfiguration = iaConfiguration;
+        enemyImage.sprite = iaConfiguration.EnemySprite;
         enemyName.text = iaConfiguration.EnemyName;
         nickname.text = iaConfiguration.Nickname;
         velocity.text = "Velocity: " + Mathf.Min(iaConfiguration.MaxVelocity, 10).ToString();
