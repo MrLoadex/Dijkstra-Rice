@@ -16,4 +16,5 @@ public class IAConfiguration : ScriptableObject
     public string Nickname => nickname;
     public float MaxVelocity => maxVelocity;
     public int ErrorPercentage => errorPercentage;
+
 }

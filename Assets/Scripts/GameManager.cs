@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Runtime.InteropServices;
+
 
 public class GameManager : Singleton<GameManager>
 {
@@ -34,9 +36,25 @@ public class GameManager : Singleton<GameManager>
     private int actualScore;
     public int ActualScore => actualScore;
     public bool IsMobile => isMobile;
+
+    #if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern int IsMobileDevice();
+    #endif
+
+    void DetectDevice()
+    {
+        #if UNITY_WEBGL && !UNITY_EDITOR
+            isMobile = IsMobileDevice() == 1;
+        #else
+            isMobile = Application.isMobilePlatform;
+        #endif
+
+        Debug.Log("¿Es dispositivo móvil? " + isMobile);
+    }
+
     void Start()
     {
-        isMobile = gameMatch.IsMobile; //asquerosidad, pero no tengo tiempo para arreglarlo
         Time.timeScale = 1;
         continueNormalGame();
     }
@@ -45,7 +63,7 @@ public class GameManager : Singleton<GameManager>
         // Instanciar el coche del jugador.
         GameObject playerCar = Instantiate(playerCarPrefab.gameObject, corners[0, 0].transform.position, Quaternion.identity);
         // Instanciar el coche de la IA.
-        GameObject iaCar = Instantiate(iaCarPrefab.gameObject, corners[0, 0].transform.position - Vector3.forward * 10, Quaternion.identity);
+        GameObject iaCar = Instantiate(iaCarPrefab.gameObject, corners[0, 0].transform.position - Vector3.forward * 5, Quaternion.identity);
 
         // Configurar el coche del jugador.
         if (mainCamera == null) mainCamera = Camera.main;
@@ -175,12 +193,6 @@ public class GameManager : Singleton<GameManager>
     public void ExitGame()
     {
         Application.Quit();
-    }
-    public void SetIsMobile()
-    {
-        isMobile = !isMobile;
-        gameMatch.IsMobile = isMobile;
-        Debug.Log("isMobile: " + isMobile);
     }
     void OnEnable()
     {

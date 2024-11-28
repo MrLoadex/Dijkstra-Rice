@@ -9,7 +9,7 @@ public class ScoresManager : Singleton<ScoresManager>
     public static Action<(int, string)[]> UpdatedScoresEvent;
     (int, string)[] scores = new (int, string)[5];
     
-    private string token = ""; // Asegúrate de mantener tu token seguro
+    private string token = ""; // ACA VA EL TOKEN PAPITO
     private string gistId = "d8d3ad587a97d875706d671a89883bb7"; // El ID de tu Gist
     private string gistApiUrl = "https://api.github.com/gists/";
 
@@ -22,8 +22,7 @@ public class ScoresManager : Singleton<ScoresManager>
     {
         StartCoroutine(ReadScoresCoroutine());
     }
-    // Crear o actualizar el Gist
-    
+    // Crear o actualizar el Gist   
     public void AddScore(string name)
     {
         if (name == "") name = "Anónimo";
@@ -168,4 +167,5 @@ public class ScoresManager : Singleton<ScoresManager>
         }
         UpdatedScoresEvent?.Invoke(scores);
     }
+
 }

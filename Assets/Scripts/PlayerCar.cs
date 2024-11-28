@@ -6,7 +6,7 @@ public class PlayerCar : Car
 
     void Start()
     {
-        //si es movil
+        // Detectar el tipo de controlador según el dispositivo
         if (GameManager.Instance.IsMobile)
         {
             controller = new MobileController();
@@ -75,7 +75,7 @@ public class PlayerCar : Car
         int weight = 0;
         if (actualCorner == null)
         {
-            Debug.Log("El coche no esta en el nodo actual");
+            Debug.Log("El coche no está en el nodo actual");
             return;
         }
 
