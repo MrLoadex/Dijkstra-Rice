@@ -2,16 +2,20 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using System.Runtime.InteropServices;
-
 
 public class GameManager : Singleton<GameManager>
 {
+    [Header("Configuraciones Generales")]
+    [SerializeField] private GameSettings gameSettings;
+    [SerializeField] private float startTime = 15f;
+    [SerializeField] private Vector2Int carStartPosition = new Vector2Int(0, 0);
+    [SerializeField] private GameObject cityStartPointPrefab;
 
-    [SerializeField] private GameMatch gameMatch;
+    [Header("Configuraciones de Partidas")]
+    [SerializeField] private NormalMatch gameNormalMatch;
+    [SerializeField] private CasualMatch casualMatch;
 
     [Header("Misiones")]
-
     [SerializeField] private bool freeGame;
     [SerializeField] private Mission actualMission;
 
@@ -37,33 +41,27 @@ public class GameManager : Singleton<GameManager>
     public int ActualScore => actualScore;
     public bool IsMobile => isMobile;
 
-    #if UNITY_WEBGL && !UNITY_EDITOR
-    [DllImport("__Internal")]
-    private static extern int IsMobileDevice();
-    #endif
-
-    void DetectDevice()
-    {
-        #if UNITY_WEBGL && !UNITY_EDITOR
-            isMobile = IsMobileDevice() == 1;
-        #else
-            isMobile = Application.isMobilePlatform;
-        #endif
-
-        Debug.Log("¿Es dispositivo móvil? " + isMobile);
-    }
-
     void Start()
     {
         Time.timeScale = 1;
-        continueNormalGame();
+
+        isMobile = gameSettings.Mobile;
+
+        if (gameSettings.FreeGame)
+        {
+            CreateNewFreeGame(casualMatch.IAConfiguration, casualMatch.CityBlocksX, casualMatch.CityBlocksZ);
+        }
+        else
+        {
+            continueNormalGame();
+        }
     }
     void ConfigureCars()
     {   
         // Instanciar el coche del jugador.
-        GameObject playerCar = Instantiate(playerCarPrefab.gameObject, corners[0, 0].transform.position, Quaternion.identity);
+        GameObject playerCar = Instantiate(playerCarPrefab.gameObject, corners[carStartPosition.x, carStartPosition.y].transform.position, Quaternion.identity);
         // Instanciar el coche de la IA.
-        GameObject iaCar = Instantiate(iaCarPrefab.gameObject, corners[0, 0].transform.position - Vector3.forward * 5, Quaternion.identity);
+        GameObject iaCar = Instantiate(iaCarPrefab.gameObject, corners[carStartPosition.x, carStartPosition.y].transform.position - Vector3.forward * 5, Quaternion.identity);
 
         // Configurar el coche del jugador.
         if (mainCamera == null) mainCamera = Camera.main;
@@ -79,17 +77,22 @@ public class GameManager : Singleton<GameManager>
     }
     void OnCityBuilt()
     {
-        if (freeGame && actualMission == null) actualMission = gameMatch.Missions[0];
+        if (freeGame && actualMission == null) actualMission = gameNormalMatch.Missions[0];
+        
         corners = cityBuilder.Corners;
         targets = cityBuilder.Targets;
         actualMission.StartMission(targets, corners);
-        UIManager.Instance.ShowStartPanel(iaConfiguration);
+        UIManager.Instance.ShowStartPanel(iaConfiguration, startTime);
         if (isMobile) UIManager.Instance.ShowMobilePanel();
+        //mostrar un punto en la pantalla donde se va a empezar la ciudad
+        Vector3 cityStartPosition = corners[carStartPosition.x, carStartPosition.y].transform.position;
+        GameObject cityStartPoint = Instantiate(cityStartPointPrefab, cityStartPosition, Quaternion.identity);
+        Destroy(cityStartPoint, startTime);
         StartCoroutine(StartGameCoroutine());
     }
     IEnumerator StartGameCoroutine()
     {
-        yield return new WaitForSeconds(3.3f);
+        yield return new WaitForSeconds(startTime);
         SoundManager.Instance.PlayGameMusic();
         ConfigureCars();
     }
@@ -113,19 +116,17 @@ public class GameManager : Singleton<GameManager>
             if (playerWon)
             {
                 SoundManager.Instance.PlayWinSound();
-                gameMatch.Score += 1;
-                gameMatch.LastMission = actualMission;
-                gameMatch.Continue = true;
-                UIManager.Instance.ShowNextMissionPanel(gameMatch.Score);
+                gameNormalMatch.Score += 1;
+                gameNormalMatch.LastMission = actualMission;
+                gameNormalMatch.Continue = true;
+                UIManager.Instance.ShowNextMissionPanel(gameNormalMatch.Score);
             }
             else
             {
                 SoundManager.Instance.PlayLoseSound();
-                UIManager.Instance.ShowGameOverPanel(gameMatch.Score);
-                actualScore = gameMatch.Score;
-                gameMatch.Score = 0;
-                gameMatch.Continue = false;
-                gameMatch.LastMission = null;
+                UIManager.Instance.ShowGameOverPanel(gameNormalMatch.Score);
+                actualScore = gameNormalMatch.Score;
+                gameNormalMatch.Reset();
             }
             //pausar el tiempo
             Time.timeScale = 0;
@@ -133,21 +134,25 @@ public class GameManager : Singleton<GameManager>
     }
     void continueNormalGame()
     {
+        if (!gameNormalMatch.Continue)
+        {
+            CreateNewNormalGame();
+            return;
+        }
         // Si se continua la partida, se carga la siguiente mision.
-        if (!gameMatch.Continue) return;
         freeGame = false;
         UIManager.Instance.ClosePanels();
         
-        int lastMissionIndex = Array.IndexOf(gameMatch.Missions, gameMatch.LastMission); // 0
+        int lastMissionIndex = Array.IndexOf(gameNormalMatch.Missions, gameNormalMatch.LastMission); // 0
         
-        if (lastMissionIndex < gameMatch.Missions.Length - 1) // 0 < 2
+        if (lastMissionIndex < gameNormalMatch.Missions.Length - 1) // 0 < 2
         {
-            Debug.Log("Nueva mision: " + gameMatch.Missions[lastMissionIndex + 1].name);
-            actualMission = gameMatch.Missions[lastMissionIndex + 1]; // gameMatch.Missions[1]
+            Debug.Log("Nueva mision: " + gameNormalMatch.Missions[lastMissionIndex + 1].name);
+            actualMission = gameNormalMatch.Missions[lastMissionIndex + 1]; // gameMatch.Missions[1]
         }
         else
         {
-            actualMission = gameMatch.LastMission; // gameMatch.Missions[0]
+            actualMission = gameNormalMatch.LastMission; // gameMatch.Missions[0]
         }
         iaConfiguration = actualMission.IAConfiguration;
         int randomX = UnityEngine.Random.Range(5, 16);
@@ -164,8 +169,8 @@ public class GameManager : Singleton<GameManager>
     public void CreateNewNormalGame()
     {
         freeGame = false;
-        actualMission = gameMatch.Missions[0];
-        iaConfiguration = gameMatch.Missions[0].IAConfiguration;
+        actualMission = gameNormalMatch.Missions[0];
+        iaConfiguration = gameNormalMatch.Missions[0].IAConfiguration;
         int randomX = UnityEngine.Random.Range(5, 16);
         int randomZ = UnityEngine.Random.Range(5, 16);
         cityBuilder.BuildCity(randomX, randomZ);
@@ -188,7 +193,11 @@ public class GameManager : Singleton<GameManager>
     }
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("menuScene");
+    }
+    public void LoadNextScene()
+    {
+        SceneManager.LoadScene("gameScene");
     }
     public void ExitGame()
     {

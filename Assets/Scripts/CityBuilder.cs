@@ -24,6 +24,7 @@ public class CityBuilder : MonoBehaviour
     
     public Corner[,] Corners => corners;
     public Target[,] Targets => targets;
+    public int CityBlocks => blocksX + blocksZ;
 
     public void BuildCity(int x, int z)
     {

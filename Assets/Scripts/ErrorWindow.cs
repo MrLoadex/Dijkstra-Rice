@@ -5,13 +5,19 @@ public class ErrorWindow : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI errorText;
 
-    public void SetErrorText(string text)
+    public void Configure(string text)
     {
         errorText.text = text;
     }
 
     void Start()
     {
-        Destroy(gameObject, 3f);
+        Debug.Log("ErrorWindow Start");
+        Destroy(gameObject, 1.5f);
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("ErrorWindow Destroy");
     }
 }

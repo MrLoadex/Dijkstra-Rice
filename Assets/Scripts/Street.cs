@@ -5,18 +5,20 @@ using TMPro;
 
 public class Street : MonoBehaviour
 {
-    [SerializeField] private TextMeshPro textMesh;
+    [SerializeField] private TextMeshPro velocityTMP;
+    [SerializeField] private TextMeshPro minimapVelocityTMP;
     public int Weight = 0;
 
     void Start()
     {
-        textMesh = GetComponentInChildren<TextMeshPro>();
+        
     }
 
     public void UpdateValue()
     {
         int velocity = (int)(100 * Mathf.Exp(-(0.3f * Weight)));
-        textMesh.text = velocity.ToString();
+        velocityTMP.text = velocity.ToString();
+        minimapVelocityTMP.text = velocity.ToString();
     }
 
     public void Updat()

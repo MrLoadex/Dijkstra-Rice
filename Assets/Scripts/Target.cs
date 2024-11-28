@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Target : MonoBehaviour //nodo
 {
     public Action<CarType> targetCompletedEvent;
     
+    [SerializeField] private TextMeshPro targetText;
+
     [SerializeField] private bool isUserActive = false;
     [SerializeField] private bool isIAActive = false;
     public bool IsUserActive => isUserActive;
@@ -16,14 +19,17 @@ public class Target : MonoBehaviour //nodo
         if (IsUserActive)
         {
             GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.5f); // Verde transparente
+            targetText.enabled = true;
         }
         else if (IsIAActive)
         {
             GetComponent<Renderer>().material.color = new Color(1, 0, 0, 0.5f); // Rojo transparente
+            targetText.enabled = true;
         }
         else
         {
             GetComponent<Renderer>().enabled = false;
+            targetText.enabled = false;
         }
     }
 
