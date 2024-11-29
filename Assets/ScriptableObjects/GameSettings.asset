@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fda117869ab564283f879739044dcd, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  freeGame: 0
-  mobile: 1
+  FreeGame: 1
+  Mobile: 1

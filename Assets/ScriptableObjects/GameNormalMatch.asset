@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca25de323440c834eb480bac65154e8a, type: 3}
   m_Name: GameNormalMatch
   m_EditorClassIdentifier: 
-  IsMobile: 0
   missions:
   - {fileID: 11400000, guid: 65dcf770559ac964a87efbd029570090, type: 2}
   - {fileID: 11400000, guid: d32bfe3f40ae5e447abc59d2510b8cc7, type: 2}
   - {fileID: 11400000, guid: 3ee17b11754012d4fb808ad3cde0f05f, type: 2}
   - {fileID: 11400000, guid: ce94a401fa3def2478e9d1e923df395a, type: 2}
   Score: 0
-  LastMission: {fileID: 11400000, guid: 65dcf770559ac964a87efbd029570090, type: 2}
+  LastMission: {fileID: 0}
   Continue: 0
