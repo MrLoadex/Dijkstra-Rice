@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834f07ac13023e448a88937bb3027dff, type: 3}
   m_Name: CasualMatch
   m_EditorClassIdentifier: 
-  iaConfiguration: {fileID: 11400000, guid: 171aafac09aca9f4f8c076e9d26d6958, type: 2}
-  cityBlocksX: 5
-  cityBlocksZ: 5
+  IAConfiguration: {fileID: 11400000, guid: 45709d5d2c75fcf4bbeef0d5c0f86db4, type: 2}
+  CityBlocksX: 10
+  CityBlocksZ: 10

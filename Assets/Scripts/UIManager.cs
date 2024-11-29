@@ -38,11 +38,6 @@ public class UIManager : Singleton<UIManager>
     public static Action TurnLeftActionEvent;
     public static Action TurnRightActionEvent;
     public static Action AccelerateActionEvent;
-
-
-    void Start()
-    {
-    }
        
     public void SubmitUserName()
     {
@@ -129,6 +124,18 @@ public class UIManager : Singleton<UIManager>
     {
         int cityBlocks = cityBuilder.CityBlocks;
         minimapCamera.orthographicSize = cityBlocks * 4f;
+    }
+    public void MoveXMinimapCamera(int x)
+    {
+        minimapCamera.transform.position = new Vector3(minimapCamera.transform.position.x + x, minimapCamera.transform.position.y, minimapCamera.transform.position.z);
+    }
+    public void MoveZMinimapCamera(int z)
+    {
+        minimapCamera.transform.position = new Vector3(minimapCamera.transform.position.x, minimapCamera.transform.position.y, minimapCamera.transform.position.z + z);
+    }
+    public void ZoomMinimapCamera(float zoom)
+    {
+        minimapCamera.orthographicSize += zoom;
     }
 
     void OnEnable()

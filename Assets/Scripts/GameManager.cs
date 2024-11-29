@@ -193,6 +193,7 @@ public class GameManager : Singleton<GameManager>
     }
     public void RestartGame()
     {
+        Debug.Log("RestartGame");
         SceneManager.LoadScene("menuScene");
     }
     public void LoadNextScene()

@@ -5,11 +5,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CasualMatch", menuName = "ScriptableObjects/GameMatch", order = 1)]
 public class CasualMatch : ScriptableObject
 {
-    [SerializeField] private IAConfiguration iaConfiguration;
-    [SerializeField] private int cityBlocksX;
-    [SerializeField] private int cityBlocksZ;
+    public IAConfiguration IAConfiguration;
+    public int CityBlocksX;
+    public int CityBlocksZ;
 
-    public IAConfiguration IAConfiguration => iaConfiguration;
-    public int CityBlocksX => cityBlocksX;
-    public int CityBlocksZ => cityBlocksZ;
+    public void Reset()
+    {
+        IAConfiguration = null;
+        CityBlocksX = 0;
+        CityBlocksZ = 0;
+    }
 }
