@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 303c0cb3e6cdedb4ab8de4a0cccd9b07, type: 3}
   m_Name: 1_Bob
   m_EditorClassIdentifier: 
-  enemySprite: {fileID: 21300000, guid: 15119abef002ac84a99d61515a0681d8, type: 3}
+  enemySprite: {fileID: 21300000, guid: 0a42e1a7b4bfe3349bd2971a0ef291b2, type: 3}
   enemyName: Bob
   nickname: El Despistado
   maxVelocity: 8
-  errorPercentage: 75
+  errorPercentage: 60

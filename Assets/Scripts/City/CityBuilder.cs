@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
 public class CityBuilder : MonoBehaviour
 {
     public static Action CityBuiltEvent;
@@ -177,24 +178,4 @@ public class CityBuilder : MonoBehaviour
     {
         return targets[x, z];
     }
-
-    void Update()
-    {
-
-    }
-
-    void OnEnable()
-    {
-        //UIManager.GameConfiguredEvent += BuildCity;
-    }
-
-    void OnDisable()
-    {
-        //UIManager.GameConfiguredEvent -= BuildCity;
-    }
-
-    private void OnDestroy() {
-        //UIManager.GameConfiguredEvent -= BuildCity;
-    }
-
 }

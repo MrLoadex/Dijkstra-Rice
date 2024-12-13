@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d2adda6bda4c1842b09fc1fbc9267e5, type: 3}
-  m_Name: 1_BobMission
+  m_Script: {fileID: 11500000, guid: 303c0cb3e6cdedb4ab8de4a0cccd9b07, type: 3}
+  m_Name: 7_Rocky
   m_EditorClassIdentifier: 
-  iaConfiguration: {fileID: 11400000, guid: 171aafac09aca9f4f8c076e9d26d6958, type: 2}
-  activeUserTarget: 1
-  activeIATarget: 1
-  randomizeTargets: 1
+  enemySprite: {fileID: 21300000, guid: 642a71fae1838354983cabc3d4f9e197, type: 3}
+  enemyName: Rocky
+  nickname: El Veterano
+  maxVelocity: 9
+  errorPercentage: 10

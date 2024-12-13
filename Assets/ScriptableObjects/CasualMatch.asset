@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CasualMatch
   m_EditorClassIdentifier: 
   IAConfiguration: {fileID: 11400000, guid: 45709d5d2c75fcf4bbeef0d5c0f86db4, type: 2}
-  CityBlocksX: 1
-  CityBlocksZ: 6
+  CityBlocksX: 10
+  CityBlocksZ: 10

@@ -46,12 +46,15 @@ public class IACar : Car
         controller.NextCornerEvent += OnNextCorner;
     }
 
+    #region EVENTS
+
     void OnDisable()
     {
         controller.NextCornerEvent -= OnNextCorner;
     }
 
-    private void OnDestroy() {
+    void OnDestroy() {
         controller.NextCornerEvent -= OnNextCorner;
     }
+    #endregion
 }

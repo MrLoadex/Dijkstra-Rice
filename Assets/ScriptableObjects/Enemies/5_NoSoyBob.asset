@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 303c0cb3e6cdedb4ab8de4a0cccd9b07, type: 3}
-  m_Name: 4_Ayrton
+  m_Name: 5_NoSoyBob
   m_EditorClassIdentifier: 
-  enemySprite: {fileID: 21300000, guid: 6c51408d4d94cce47b83319cec5121f2, type: 3}
-  enemyName: Ayrton
-  nickname: No tenes chance
-  maxVelocity: 10
-  errorPercentage: 0
+  enemySprite: {fileID: 21300000, guid: 0a42e1a7b4bfe3349bd2971a0ef291b2, type: 3}
+  enemyName: No soy Bob
+  nickname: Bob? No lo conozco!
+  maxVelocity: 9
+  errorPercentage: 45

@@ -3,13 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Direction
-{
-    Left,
-    Straight,
-    Right
-}
-
 public class IAController : Controller
 {
     private Corner currentCorner;

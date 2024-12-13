@@ -29,6 +29,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private TMP_InputField cityBlocksXInput;
     [SerializeField] private TMP_InputField cityBlocksZInput;
 
+    [Header("Enemy Panel Config")]
+    [SerializeField] private Transform enemysContent;
+
 
     private void Start() 
     {
@@ -75,7 +78,7 @@ public class MenuManager : MonoBehaviour
     {
         ClosePanels();
         //limpiar el panel de enemigos
-        foreach (Transform child in enemiesPanel.transform)
+        foreach (Transform child in enemysContent)
         {
             child.GetComponent<EnemyCard>().SelectEnemyEvent -= setEnemyConfiguration;
             Destroy(child.gameObject);
@@ -83,7 +86,7 @@ public class MenuManager : MonoBehaviour
         //crear los enemigos en el panel
         foreach (var enemy in enemiesConfigurations)
         {
-            var enemyCard = Instantiate(enemyCardPrefab, enemiesPanel.transform);
+            var enemyCard = Instantiate(enemyCardPrefab, enemysContent);
             enemyCard.SelectEnemyEvent += setEnemyConfiguration;
             enemyCard.Configure(enemy);
         }

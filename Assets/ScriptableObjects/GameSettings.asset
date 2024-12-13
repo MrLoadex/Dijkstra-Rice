@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   FreeGame: 1
-  Mobile: 1
+  Mobile: 0
