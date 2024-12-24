@@ -9,7 +9,7 @@ public class ScoresManager : Singleton<ScoresManager>
     public static Action<(int, string)[]> UpdatedScoresEvent;
     (int, string)[] scores = new (int, string)[5];
     
-    [SerializeField] private string token = ""; // ACA VA EL TOKEN DE GIST DE GITHUB DE PAPITO, Acaso creias que te iba a dar el mio?
+    [SerializeField] private string token = ""; // ACA VA EL TOKEN DE GIST DE GITHUB, Acaso creias que te iba a dar el mio?
     [SerializeField] private string gistId = ""; // El ID de tu Gist
     private string gistApiUrl = "https://api.github.com/gists/";
 
